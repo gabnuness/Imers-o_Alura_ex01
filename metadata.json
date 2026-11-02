@@ -1,0 +1,6 @@
+{
+  "name": "Calculadora Python & Guia Interativo",
+  "description": "Calculadora completa em Python com as 4 operações básicas, simulador passo a passo e explicação detalhada de funcionamento.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
