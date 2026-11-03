@@ -1,13 +1,13 @@
 # 🐍 Calculadora em Python & Laboratório Didático Interativo
 
-> Projeto educacional completo demonstrando as **4 operações matemáticas básicas** em Python, tratamento defensivo de exceções, padrões de arquitetura de software, Type Hints (PEP 484) e simulação interativa. Ideal para estudos e compartilhamento em comunidades (Discord, fóruns e faculdades).
+> Projeto educacional completo demonstrando as **operações matemáticas básicas e porcentagem** em Python, tratamento defensivo de exceções, padrões de arquitetura de software, Type Hints (PEP 484) e simulação interativa. Ideal para estudos e compartilhamento em comunidades (Discord, fóruns e faculdades).
 
 ---
 
 ## 🚀 Sobre o Projeto
 
 Este repositório foi construído para sanar as dúvidas mais frequentes de quem está aprendendo a programar:
-1. **Como estruturar as 4 operações básicas** (Adição, Subtração, Multiplicação e Divisão).
+1. **Como estruturar operações matemáticas** (Adição, Subtração, Multiplicação, Divisão e Porcentagem).
 2. **Como proteger o código contra falhas** (`ZeroDivisionError` e `ValueError`).
 3. **Qual a diferença entre arquiteturas** (Linear, Modular/Funcional e Orientada a Objetos).
 4. **O que significa a sintaxe moderna** `def x(a: float, b: float) -> float`.

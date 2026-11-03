@@ -58,7 +58,7 @@ export const ExplanationGuide: React.FC = () => {
               </span>
               <h4 className="font-bold text-white mb-1">Início &amp; Menu</h4>
               <p className="text-slate-400 text-[11px]">
-                O interpretador entra no laço <code className="text-indigo-300 font-mono">while True</code> e exibe as 5 opções do menu.
+                O interpretador entra no laço <code className="text-indigo-300 font-mono">while True</code> e exibe as 6 opções do menu.
               </p>
             </div>
           </div>
@@ -70,7 +70,7 @@ export const ExplanationGuide: React.FC = () => {
               </span>
               <h4 className="font-bold text-white mb-1">Escolha</h4>
               <p className="text-slate-400 text-[11px]">
-                O usuário digita a opção (1-5). Se digitar "5", a instrução <code className="text-indigo-300 font-mono">break</code> encerra o programa.
+                O usuário digita a opção (1-6). Se digitar "6", a instrução <code className="text-indigo-300 font-mono">break</code> encerra o programa.
               </p>
             </div>
           </div>
@@ -94,7 +94,7 @@ export const ExplanationGuide: React.FC = () => {
               </span>
               <h4 className="font-bold text-white mb-1">Decisão (if/elif)</h4>
               <p className="text-slate-400 text-[11px]">
-                A estrutura condicional encaminha para a função correspondente: <code className="text-indigo-300 font-mono">adicao</code>, <code className="text-indigo-300 font-mono">subtracao</code>, <code className="text-indigo-300 font-mono">multiplicacao</code> ou <code className="text-indigo-300 font-mono">divisao</code>.
+                A estrutura condicional encaminha para a função correspondente: <code className="text-indigo-300 font-mono">adicao</code>, <code className="text-indigo-300 font-mono">subtracao</code>, <code className="text-indigo-300 font-mono">multiplicacao</code>, <code className="text-indigo-300 font-mono">divisao</code> ou <code className="text-indigo-300 font-mono">porcentagem</code>.
               </p>
             </div>
           </div>
@@ -106,7 +106,7 @@ export const ExplanationGuide: React.FC = () => {
               </span>
               <h4 className="font-bold text-white mb-1">Cálculo &amp; Erros</h4>
               <p className="text-slate-400 text-[11px]">
-                A função retorna o resultado via <code className="text-indigo-300 font-mono">return</code>. Se <code className="text-rose-300 font-mono">b == 0</code>, dispara <code className="text-rose-300 font-mono">ZeroDivisionError</code> capturado com segurança.
+                A função retorna o resultado via <code className="text-indigo-300 font-mono">return</code>. Se <code className="text-rose-300 font-mono">b == 0</code> na divisão, dispara <code className="text-rose-300 font-mono">ZeroDivisionError</code> capturado com segurança.
               </p>
             </div>
           </div>
@@ -176,7 +176,7 @@ export const ExplanationGuide: React.FC = () => {
           Por que usamos <code className="font-mono text-indigo-300">if __name__ == "__main__":</code>?
         </h3>
         <p className="text-xs text-slate-300 leading-relaxed mt-2">
-          No final do arquivo <code className="font-mono text-indigo-300">calculadora_modular.py</code>, você encontra o bloco:
+          No final do arquivo <code className="font-mono text-indigo-300">calculadora.py</code>, você encontra o bloco:
         </p>
         <div className="bg-slate-950 rounded-xl p-3.5 font-mono text-xs text-emerald-300 border border-slate-800 my-3">
           {`if __name__ == "__main__":\n    main()`}

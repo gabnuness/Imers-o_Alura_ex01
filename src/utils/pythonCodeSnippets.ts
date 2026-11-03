@@ -1,3 +1,5 @@
+import { OperationType } from './calculator';
+
 /**
  * Python source code examples, step traces, and educational annotations.
  */
@@ -12,20 +14,20 @@ export interface PythonScriptOption {
 }
 
 export const PYTHON_MODULAR_CODE = `"""
-Calculadora Interativa em Python
-Demonstra: Funções, Type Hints, Tratamento de Exceções e Laços de Repetição.
+Calculadora Interativa em Python (Versão Modular / Profissional)
+Demonstra: Modularização em funções, Type Hints, Tratamento de Exceções e Laço Contínuo.
 """
 
 def adicao(a: float, b: float) -> float:
-    """Retorna a soma de dois números."""
+    """Retorna a soma de dois números reais."""
     return a + b
 
 def subtracao(a: float, b: float) -> float:
-    """Retorna a diferença entre dois números."""
+    """Retorna a diferença entre dois números reais."""
     return a - b
 
 def multiplicacao(a: float, b: float) -> float:
-    """Retorna o produto de dois números."""
+    """Retorna o produto de dois números reais."""
     return a * b
 
 def divisao(a: float, b: float) -> float:
@@ -37,8 +39,15 @@ def divisao(a: float, b: float) -> float:
         raise ZeroDivisionError("Erro matemático: Divisão por zero não é permitida.")
     return a / b
 
+def porcentagem(valor: float, taxa: float) -> float:
+    """
+    Retorna a porcentagem calculada (taxa% de valor).
+    Exemplo: porcentagem(200, 15) -> 15% de 200 = 30.0
+    """
+    return (valor * taxa) / 100.0
+
 def exibir_menu() -> None:
-    """Exibe o menu de operações disponíveis."""
+    """Exibe o menu de operações disponíveis no console."""
     print("\\n" + "=" * 32)
     print("      CALCULADORA EM PYTHON     ")
     print("=" * 32)
@@ -46,29 +55,38 @@ def exibir_menu() -> None:
     print("2. Subtração (-)")
     print("3. Multiplicação (*)")
     print("4. Divisão (/)")
-    print("5. Sair")
+    print("5. Porcentagem (%)")
+    print("6. Sair")
     print("-" * 32)
 
 def main():
     while True:
         exibir_menu()
-        opcao = input("Escolha uma opção (1-5): ").strip()
+        opcao = input("Escolha uma opção (1-6): ").strip()
 
-        if opcao == "5":
+        # Encerramento controlado
+        if opcao == "6":
             print("\\nObrigado por usar a calculadora! Encerrando...")
             break
 
-        if opcao not in ("1", "2", "3", "4"):
-            print("\\n[!] Opção inválida! Escolha um número de 1 a 5.")
+        # Validação da opção
+        if opcao not in ("1", "2", "3", "4", "5"):
+            print("\\n[!] Opção inválida! Escolha um número de 1 a 6.")
             continue
 
+        # Entrada e conversão de dados com tratamento de erro
         try:
-            num1 = float(input("Digite o primeiro número: "))
-            num2 = float(input("Digite o segundo número: "))
+            if opcao == "5":
+                num1 = float(input("Digite o valor base: "))
+                num2 = float(input("Digite a porcentagem (%): "))
+            else:
+                num1 = float(input("Digite o primeiro número: "))
+                num2 = float(input("Digite o segundo número: "))
         except ValueError:
             print("\\n[!] Erro de entrada: Por favor, digite apenas números válidos!")
             continue
 
+        # Execução da operação e tratamento de divisão por zero
         try:
             if opcao == "1":
                 resultado = adicao(num1, num2)
@@ -82,8 +100,14 @@ def main():
             elif opcao == "4":
                 resultado = divisao(num1, num2)
                 simbolo = "/"
+            elif opcao == "5":
+                resultado = porcentagem(num1, num2)
+                simbolo = "%"
 
-            print(f"\\n>>> RESULTADO: {num1} {simbolo} {num2} = {resultado}")
+            if opcao == "5":
+                print(f"\\n>>> RESULTADO: {num2}% de {num1} = {resultado}")
+            else:
+                print(f"\\n>>> RESULTADO: {num1} {simbolo} {num2} = {resultado}")
 
         except ZeroDivisionError as err:
             print(f"\\n[!] Exceção capturada: {err}")
@@ -98,7 +122,7 @@ export const PYTHON_SIMPLES_CODE = `# Calculadora Simples em Python (Para Inicia
 print("--- CALCULADORA BÁSICA ---")
 
 num1 = float(input("Digite o primeiro número: "))
-operacao = input("Digite a operação (+, -, *, /): ")
+operacao = input("Digite a operação (+, -, *, /, %): ")
 num2 = float(input("Digite o segundo número: "))
 
 if operacao == "+":
@@ -116,6 +140,9 @@ elif operacao == "/":
     else:
         resultado = num1 / num2
         print(f"Resultado: {num1} / {num2} = {resultado}")
+elif operacao == "%":
+    resultado = (num1 * num2) / 100
+    print(f"Resultado: {num2}% de {num1} = {resultado}")
 else:
     print("Operação inválida!")
 `;
@@ -152,6 +179,11 @@ class Calculadora:
         self._registrar(a, "/", b, res)
         return res
 
+    def porcentagem(self, valor: float, taxa: float) -> float:
+        res = (valor * taxa) / 100.0
+        self._registrar(valor, "%", taxa, res)
+        return res
+
     def _registrar(self, a: float, op: str, b: float, res: float) -> None:
         self.historico.append({"a": a, "op": op, "b": b, "resultado": res})
 
@@ -161,7 +193,10 @@ class Calculadora:
             print("Nenhum cálculo realizado.")
             return
         for i, item in enumerate(self.historico, start=1):
-            print(f"{i}. {item['a']} {item['op']} {item['b']} = {item['resultado']}")
+            if item["op"] == "%":
+                print(f"{i}. {item['b']}% de {item['a']} = {item['resultado']}")
+            else:
+                print(f"{i}. {item['a']} {item['op']} {item['b']} = {item['resultado']}")
 
 # Exemplo de uso:
 if __name__ == "__main__":
@@ -170,6 +205,7 @@ if __name__ == "__main__":
     print("20 - 7 =", calc.subtrair(20, 7))
     print("6 * 7 =", calc.multiplicar(6, 7))
     print("100 / 4 =", calc.dividir(100, 4))
+    print("15% de 200 =", calc.porcentagem(200, 15))
     calc.exibir_historico()
 `;
 
@@ -179,7 +215,7 @@ export const PYTHON_SCRIPTS: PythonScriptOption[] = [
     title: 'Modular & Profissional (Recomendado)',
     badge: 'Com Funções & Try/Except',
     description: 'Código estruturado com funções dedicadas, type hints, tratamento de ZeroDivisionError e ValueError, e laço infinito interativo.',
-    filename: 'calculadora_modular.py',
+    filename: 'calculadora.py',
     code: PYTHON_MODULAR_CODE,
   },
   {
@@ -214,19 +250,30 @@ export interface ExecutionStep {
 export function generateExecutionSteps(
   a: number,
   b: number,
-  operation: 'adicao' | 'subtracao' | 'multiplicacao' | 'divisao'
+  operation: OperationType
 ): ExecutionStep[] {
   const opInfo = {
-    adicao: { symbol: '+', fn: 'adicao', lineStart: 6, lineCall: 63, res: a + b },
-    subtracao: { symbol: '-', fn: 'subtracao', lineStart: 10, lineCall: 66, res: a - b },
-    multiplicacao: { symbol: '*', fn: 'multiplicacao', lineStart: 14, lineCall: 69, res: a * b },
-    divisao: { symbol: '/', fn: 'divisao', lineStart: 18, lineCall: 72, res: b === 0 ? null : a / b },
+    adicao: { symbol: '+', fn: 'adicao', lineStart: 6, lineCall: 74, res: a + b },
+    subtracao: { symbol: '-', fn: 'subtracao', lineStart: 10, lineCall: 77, res: a - b },
+    multiplicacao: { symbol: '*', fn: 'multiplicacao', lineStart: 14, lineCall: 80, res: a * b },
+    divisao: { symbol: '/', fn: 'divisao', lineStart: 18, lineCall: 83, res: b === 0 ? null : a / b },
+    porcentagem: { symbol: '%', fn: 'porcentagem', lineStart: 27, lineCall: 86, res: (a * b) / 100 },
   }[operation];
+
+  const input1Code =
+    operation === 'porcentagem'
+      ? `num1 = float(input("Digite o valor base: "))  # Base: ${a}`
+      : `num1 = float(input("Digite o primeiro número: "))  # Valor: ${a}`;
+
+  const input2Code =
+    operation === 'porcentagem'
+      ? `num2 = float(input("Digite a porcentagem (%): "))  # Taxa: ${b}%`
+      : `num2 = float(input("Digite o segundo número: "))  # Valor: ${b}`;
 
   const steps: ExecutionStep[] = [
     {
       stepNumber: 1,
-      line: 38,
+      line: 40,
       codeSnippet: `while True:`,
       explanationTitle: '1. O Laço de Repetição Principal',
       explanationText: 'O Python entra no laço `while True:`. Isso garante que o programa continue rodando para fazer múltiplos cálculos até o usuário decidir sair.',
@@ -235,8 +282,8 @@ export function generateExecutionSteps(
     },
     {
       stepNumber: 2,
-      line: 49,
-      codeSnippet: `num1 = float(input("Digite o primeiro número: "))  # Valor: ${a}`,
+      line: 56,
+      codeSnippet: input1Code,
       explanationTitle: '2. Entrada e Conversão de Tipo (Casting)',
       explanationText: `A função input() recebe o texto do usuário. A função float() converte a string para um número decimal em ponto flutuante (${a}).`,
       variables: { num1: a, num2: '---', operacao: opInfo.symbol },
@@ -244,8 +291,8 @@ export function generateExecutionSteps(
     },
     {
       stepNumber: 3,
-      line: 50,
-      codeSnippet: `num2 = float(input("Digite o segundo número: "))  # Valor: ${b}`,
+      line: 57,
+      codeSnippet: input2Code,
       explanationTitle: '3. Segunda Entrada',
       explanationText: `O segundo valor é lido e convertido da mesma forma: float("${b}") -> ${b}.`,
       variables: { num1: a, num2: b, operacao: opInfo.symbol },
@@ -285,7 +332,7 @@ export function generateExecutionSteps(
       },
       {
         stepNumber: 7,
-        line: 77,
+        line: 91,
         codeSnippet: `except ZeroDivisionError as err:\n    print(f"[!] Exceção capturada: {err}")`,
         explanationTitle: '7. Captura Graciosa do Erro (except)',
         explanationText: 'O bloco `except ZeroDivisionError` intercepta o erro com segurança! Ele imprime a mensagem amigável e NÃO derruba o programa, permitindo ao usuário tentar novamente.',
@@ -295,37 +342,53 @@ export function generateExecutionSteps(
       }
     );
   } else {
+    const returnSnippet =
+      operation === 'porcentagem'
+        ? `return (valor * taxa) / 100.0  # (${a} * ${b}) / 100.0 = ${opInfo.res}`
+        : `return a ${opInfo.symbol} b  # ${a} ${opInfo.symbol} ${b} = ${opInfo.res}`;
+
+    const printSnippet =
+      operation === 'porcentagem'
+        ? `print(f"\\n>>> RESULTADO: {num2}% de {num1} = {resultado}")  # ${b}% de ${a} = ${opInfo.res}`
+        : `print(f"\\n>>> RESULTADO: {num1} {simbolo} {num2} = {resultado}")  # ${a} ${opInfo.symbol} ${b} = ${opInfo.res}`;
+
     steps.push(
       {
         stepNumber: 4,
         line: opInfo.lineCall,
         codeSnippet: `resultado = ${opInfo.fn}(num1, num2)  # Chamando ${opInfo.fn}(${a}, ${b})`,
         explanationTitle: `4. Chamando a Função ${opInfo.fn}()`,
-        explanationText: `O interpretador transfere o controle para o escopo local da função \`${opInfo.fn}\`. Os argumentos \`${a}\` e \`${b}\` são atribuídos aos parâmetros \`a\` e \`b\`.`,
+        explanationText: `O interpretador transfere o controle para o escopo local da função \`${opInfo.fn}\`. Os argumentos \`${a}\` e \`${b}\` são atribuídos aos parâmetros.`,
         variables: { 'escopo': `local (${opInfo.fn})`, a, b },
         conceptBadge: 'Escopo e Parâmetros',
       },
       {
         stepNumber: 5,
-        line: opInfo.lineStart + 1,
-        codeSnippet: `return a ${opInfo.symbol} b  # ${a} ${opInfo.symbol} ${b} = ${opInfo.res}`,
+        line: opInfo.lineStart + 5,
+        codeSnippet: returnSnippet,
         explanationTitle: '5. Execução do Cálculo e Retorno',
-        explanationText: `A CPU executa a operação aritmética básica (${a} ${opInfo.symbol} ${b}). O comando \`return\` envia o valor ${opInfo.res} de volta para quem chamou a função.`,
-        variables: { calculo: `${a} ${opInfo.symbol} ${b}`, valor_retornado: opInfo.res },
+        explanationText:
+          operation === 'porcentagem'
+            ? `A CPU calcula a proporção percentual: (${a} * ${b}) / 100 = ${opInfo.res}. O comando \`return\` devolve o resultado.`
+            : `A CPU executa a operação aritmética (${a} ${opInfo.symbol} ${b}). O comando \`return\` envia o valor ${opInfo.res} de volta para quem chamou a função.`,
+        variables: {
+          calculo: operation === 'porcentagem' ? `(${a} * ${b}) / 100` : `${a} ${opInfo.symbol} ${b}`,
+          valor_retornado: opInfo.res,
+        },
         conceptBadge: 'Retorno de Função (return)',
       },
       {
         stepNumber: 6,
-        line: 75,
-        codeSnippet: `print(f"\\n>>> RESULTADO: {num1} {simbolo} {num2} = {resultado}")`,
+        line: 89,
+        codeSnippet: printSnippet,
         explanationTitle: '6. Exibição Formatada com f-string',
-        explanationText: `Python utiliza f-strings (format string literais introduzidas no Python 3.6). As expressões entre chaves {num1}, {simbolo}, {num2} e {resultado} são substituídas diretamente pelos seus valores.`,
+        explanationText: `Python utiliza f-strings literais. As variáveis entre chaves são interpoladas com formatação clara e amigável para o usuário.`,
         variables: {
           num1: a,
           simbolo: opInfo.symbol,
           num2: b,
           resultado: opInfo.res,
-          saida: `${a} ${opInfo.symbol} ${b} = ${opInfo.res}`
+          saida: operation === 'porcentagem' ? `${b}% de ${a} = ${opInfo.res}` : `${a} ${opInfo.symbol} ${b} = ${opInfo.res}`,
         },
         conceptBadge: 'F-Strings & Formatação',
       }
@@ -342,7 +405,7 @@ export const CONCEPT_EXPLANATIONS = [
     summary: 'Dividir para conquistar: cada operação em sua própria função.',
     details:
       'Em vez de misturar todos os cálculos em um único bloco de código, definimos funções especializadas com a palavra-chave `def`. Isso facilita testes unitários, reaproveitamento de código e leitura limpa.',
-    example: 'def adicao(a: float, b: float) -> float:\n    return a + b',
+    example: 'def adicao(a: float, b: float) -> float:\n    return a + b\n\ndef porcentagem(valor: float, taxa: float) -> float:\n    return (valor * taxa) / 100.0',
     benefits: ['Reutilizável em outros scripts', 'Fácil de testar', 'Separação de responsabilidades'],
   },
   {

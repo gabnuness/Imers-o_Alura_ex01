@@ -30,6 +30,11 @@ class Calculadora:
         self._registrar(a, "/", b, res)
         return res
 
+    def porcentagem(self, valor: float, taxa: float) -> float:
+        res = (valor * taxa) / 100.0
+        self._registrar(valor, "%", taxa, res)
+        return res
+
     def _registrar(self, a: float, op: str, b: float, res: float) -> None:
         self.historico.append({"a": a, "op": op, "b": b, "resultado": res})
 
@@ -39,7 +44,10 @@ class Calculadora:
             print("Nenhum cálculo realizado.")
             return
         for i, item in enumerate(self.historico, start=1):
-            print(f"{i}. {item['a']} {item['op']} {item['b']} = {item['resultado']}")
+            if item["op"] == "%":
+                print(f"{i}. {item['b']}% de {item['a']} = {item['resultado']}")
+            else:
+                print(f"{i}. {item['a']} {item['op']} {item['b']} = {item['resultado']}")
 
 if __name__ == "__main__":
     calc = Calculadora()
@@ -47,4 +55,5 @@ if __name__ == "__main__":
     print("20 - 7 =", calc.subtrair(20, 7))
     print("6 * 7 =", calc.multiplicar(6, 7))
     print("100 / 4 =", calc.dividir(100, 4))
+    print("15% de 200 =", calc.porcentagem(200, 15))
     calc.exibir_historico()

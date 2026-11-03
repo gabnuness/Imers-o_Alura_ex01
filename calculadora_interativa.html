@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Python - Laboratório Interativo</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre, .font-mono { font-family: 'Fira Code', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-amber-500 p-0.5 shadow-lg shadow-indigo-500/20 flex items-center justify-center">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <i data-lucide="terminal" class="w-6 h-6 text-indigo-400"></i>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                Calculadora em Python
+                <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 font-mono">
+                  v3.12+
+                </span>
+              </h1>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Operações aritméticas (+, -, *, /, %), tratamento de exceções e guia didático interativo
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+            Pronto para Execução no Navegador
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex space-x-2 overflow-x-auto pb-2 scrollbar-none" id="tabs-container">
+        <button onclick="switchTab('calculadora')" id="tab-btn-calculadora" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm transition">
+          Calculadora & Testes
+        </button>
+        <button onclick="switchTab('visualizador')" id="tab-btn-visualizador" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition">
+          Simulador Passo a Passo
+        </button>
+        <button onclick="switchTab('terminal')" id="tab-btn-terminal" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition">
+          Terminal Python (CLI)
+        </button>
+        <button onclick="switchTab('guia')" id="tab-btn-guia" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition">
+          Como Funciona (Guia Didático)
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- TAB 1: CALCULADORA -->
+    <section id="tab-calculadora" class="tab-content space-y-6">
+      <!-- Banner -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold mb-3">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            Laboratório Interativo de Operações
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            Calculadora com Adição, Subtração, Multiplicação, Divisão e Porcentagem
+          </h2>
+          <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+            Selecione uma operação, insira os valores e veja a computação em tempo real, além do trecho equivalente em Python e proteção contra <code class="text-rose-300 font-mono">ZeroDivisionError</code>.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Painel de Entrada -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                1. Painel de Entrada & Operação
+              </span>
+              <span id="func-badge" class="text-xs text-indigo-400 font-mono bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/40">
+                def adicao(a, b)
+              </span>
+            </div>
+
+            <!-- Presets -->
+            <div class="mt-4">
+              <span class="text-xs text-slate-400 block mb-2 font-medium">Cenários Rápidos para Testar:</span>
+              <div class="flex flex-wrap gap-2">
+                <button onclick="setPreset(200, 15, 'porcentagem')" class="px-2.5 py-1 text-xs rounded-md bg-fuchsia-950/40 hover:bg-fuchsia-900/50 text-fuchsia-300 border border-fuchsia-800/60 transition cursor-pointer font-medium">
+                  15% de 200 (Porcentagem)
+                </button>
+                <button onclick="setPreset(25, 17, 'adicao')" class="px-2.5 py-1 text-xs rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer">
+                  25 + 17
+                </button>
+                <button onclick="setPreset(100, 37, 'subtracao')" class="px-2.5 py-1 text-xs rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer">
+                  100 - 37
+                </button>
+                <button onclick="setPreset(12, 8, 'multiplicacao')" class="px-2.5 py-1 text-xs rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer">
+                  12 × 8
+                </button>
+                <button onclick="setPreset(48, 6, 'divisao')" class="px-2.5 py-1 text-xs rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer">
+                  48 ÷ 6
+                </button>
+                <button onclick="setPreset(10, 0, 'divisao')" class="px-2.5 py-1 text-xs rounded-md bg-rose-950/40 hover:bg-rose-900/50 text-rose-300 border border-rose-800/60 transition cursor-pointer font-medium">
+                  10 ÷ 0 (Divisão por Zero)
+                </button>
+              </div>
+            </div>
+
+            <!-- Inputs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+              <div>
+                <label id="label-num1" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Primeiro Número (a):
+                </label>
+                <div class="relative">
+                  <input id="input-num1" type="number" step="any" value="200" oninput="calculateNow()" class="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-white font-mono text-base focus:outline-none transition">
+                  <span class="absolute right-3 top-3 text-xs text-slate-500 font-mono">float</span>
+                </div>
+              </div>
+
+              <div>
+                <label id="label-num2" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Segundo Número (b):
+                </label>
+                <div class="relative">
+                  <input id="input-num2" type="number" step="any" value="15" oninput="calculateNow()" class="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-white font-mono text-base focus:outline-none transition">
+                  <span class="absolute right-3 top-3 text-xs text-slate-500 font-mono">float</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Operations Grid -->
+            <div class="mt-5">
+              <label class="block text-xs font-semibold text-slate-300 mb-2">Escolha a Operação:</label>
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5" id="op-buttons-container">
+                <button onclick="setOperation('adicao')" id="op-btn-adicao" class="op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-slate-950/60 border-slate-800 text-slate-400 hover:bg-slate-800/60">
+                  <span class="text-lg font-bold">+</span>
+                  <div class="mt-2"><div class="text-xs font-semibold">Adição</div><div class="text-[10px] font-mono text-slate-500">a + b</div></div>
+                </button>
+                <button onclick="setOperation('subtracao')" id="op-btn-subtracao" class="op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-slate-950/60 border-slate-800 text-slate-400 hover:bg-slate-800/60">
+                  <span class="text-lg font-bold">-</span>
+                  <div class="mt-2"><div class="text-xs font-semibold">Subtração</div><div class="text-[10px] font-mono text-slate-500">a - b</div></div>
+                </button>
+                <button onclick="setOperation('multiplicacao')" id="op-btn-multiplicacao" class="op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-slate-950/60 border-slate-800 text-slate-400 hover:bg-slate-800/60">
+                  <span class="text-lg font-bold">×</span>
+                  <div class="mt-2"><div class="text-xs font-semibold">Multiplicação</div><div class="text-[10px] font-mono text-slate-500">a * b</div></div>
+                </button>
+                <button onclick="setOperation('divisao')" id="op-btn-divisao" class="op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-slate-950/60 border-slate-800 text-slate-400 hover:bg-slate-800/60">
+                  <span class="text-lg font-bold">÷</span>
+                  <div class="mt-2"><div class="text-xs font-semibold">Divisão</div><div class="text-[10px] font-mono text-slate-500">a / b</div></div>
+                </button>
+                <button onclick="setOperation('porcentagem')" id="op-btn-porcentagem" class="op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-fuchsia-500/20 border-fuchsia-500 text-fuchsia-300 ring-1 ring-fuchsia-500">
+                  <span class="text-lg font-bold">%</span>
+                  <div class="mt-2"><div class="text-xs font-semibold">Porcentagem</div><div class="text-[10px] font-mono text-slate-500">(a * b) / 100</div></div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row gap-3">
+              <button onclick="addToHistory()" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition cursor-pointer">
+                <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+                Registrar no Histórico
+              </button>
+              <button onclick="inspectInVisualizer()" class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium border border-slate-700 transition cursor-pointer">
+                <i data-lucide="arrow-right" class="w-4 h-4 text-indigo-400"></i>
+                Ver Passo a Passo no Código
+              </button>
+            </div>
+          </div>
+
+          <!-- Result Card -->
+          <div id="result-card" class="rounded-2xl p-5 border bg-emerald-950/20 border-emerald-800/50 shadow-lg shadow-emerald-950/20 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Saída da Execução (Resultado)
+              </span>
+              <span id="result-status-badge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                Sucesso (200 OK)
+              </span>
+            </div>
+
+            <div id="result-success-box" class="mt-3">
+              <div id="result-expression-text" class="text-slate-400 text-xs font-mono">15% de 200 =</div>
+              <div id="result-value" class="text-3xl sm:text-4xl font-extrabold text-white font-mono mt-1 tracking-tight">30</div>
+            </div>
+
+            <div id="result-error-box" class="mt-3 hidden">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center flex-shrink-0 text-rose-400">
+                  <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-rose-200">ZeroDivisionError em Python</h3>
+                  <p class="text-xs text-rose-300 mt-0.5">Erro: Não é possível dividir por zero (ZeroDivisionError).</p>
+                  <p class="text-xs text-slate-400 mt-2">
+                    Em Python, uma divisão por zero gera uma exceção nativa. O bloco <code class="font-mono text-indigo-300">try...except</code> intercepta essa falha para que o programa não feche abruptamente!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800">
+              <div class="text-[11px] text-slate-400 font-medium mb-1.5">Como este cálculo se parece no código Python:</div>
+              <div id="result-python-snippet" class="bg-slate-950 rounded-lg p-3 font-mono text-xs text-indigo-300 border border-slate-800/80 overflow-x-auto whitespace-pre">resultado = porcentagem(200, 15)  # -> 15% de 200 = 30</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna da Direita: Histórico -->
+        <div class="lg:col-span-5 space-y-5">
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-indigo-400"></i>
+                Histórico Recente de Cálculos
+              </span>
+              <button onclick="clearHistory()" class="text-[11px] text-slate-500 hover:text-slate-300 transition cursor-pointer">
+                Limpar
+              </button>
+            </div>
+            <div id="history-list" class="mt-3 space-y-2"></div>
+          </div>
+
+          <!-- As 5 Funções -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+              Funções Fundamentais da Calculadora
+            </h3>
+            <div class="space-y-2 text-xs font-mono">
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800/70 text-slate-300">
+                <span class="text-indigo-400">def</span> <span class="text-emerald-400">adicao</span>(a, b): <span class="text-indigo-400">return</span> a + b
+              </div>
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800/70 text-slate-300">
+                <span class="text-indigo-400">def</span> <span class="text-sky-400">subtracao</span>(a, b): <span class="text-indigo-400">return</span> a - b
+              </div>
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800/70 text-slate-300">
+                <span class="text-indigo-400">def</span> <span class="text-amber-400">multiplicacao</span>(a, b): <span class="text-indigo-400">return</span> a * b
+              </div>
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800/70 text-slate-300">
+                <span class="text-indigo-400">def</span> <span class="text-violet-400">divisao</span>(a, b): <span class="text-indigo-400">if</span> b == 0: <span class="text-rose-400">raise</span> ZeroDivisionError(...)
+              </div>
+              <div class="p-2 rounded-lg bg-slate-950 border border-slate-800/70 text-slate-300">
+                <span class="text-indigo-400">def</span> <span class="text-fuchsia-400">porcentagem</span>(valor, taxa): <span class="text-indigo-400">return</span> (valor * taxa) / 100.0
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: VISUALIZADOR LINHA A LINHA -->
+    <section id="tab-visualizador" class="tab-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-semibold mb-1">
+              <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+              Depurador e Simulador de Execução do Interpretador
+            </div>
+            <h2 class="text-xl font-bold text-white tracking-tight">
+              Simulador Linha a Linha (Visualizer)
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Acompanhe passo a passo por onde o Python passa, quais variáveis são criadas e o que acontece na memória.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="prevStep()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition cursor-pointer border border-slate-700">
+              <i data-lucide="skip-back" class="w-4 h-4"></i>
+            </button>
+            <button onclick="toggleAutoPlay()" id="btn-autoplay" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition cursor-pointer shadow-md shadow-indigo-600/30">
+              <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+              <span>Auto-Executar</span>
+            </button>
+            <button onclick="nextStep()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition cursor-pointer border border-slate-700">
+              <i data-lucide="skip-forward" class="w-4 h-4"></i>
+            </button>
+            <button onclick="resetStep()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer border border-slate-700">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Parâmetros do visualizador -->
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3 items-center">
+          <div>
+            <label id="vis-label-a" class="block text-[11px] font-semibold text-slate-400 mb-1">Valor Base (a):</label>
+            <input id="vis-input-a" type="number" value="200" onchange="initVisualizerSteps()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">Operação:</label>
+            <select id="vis-select-op" onchange="initVisualizerSteps()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-indigo-500 focus:outline-none cursor-pointer">
+              <option value="porcentagem">Porcentagem (%)</option>
+              <option value="adicao">Adição (+)</option>
+              <option value="subtracao">Subtração (-)</option>
+              <option value="multiplicacao">Multiplicação (*)</option>
+              <option value="divisao">Divisão (/)</option>
+            </select>
+          </div>
+          <div>
+            <label id="vis-label-b" class="block text-[11px] font-semibold text-slate-400 mb-1">Porcentagem % (b):</label>
+            <input id="vis-input-b" type="number" value="15" onchange="initVisualizerSteps()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-indigo-500 focus:outline-none">
+          </div>
+          <div class="flex gap-1.5 pt-4 sm:pt-0">
+            <button onclick="setVisPreset(200, 15, 'porcentagem')" class="flex-1 py-1.5 px-2 text-[11px] rounded-lg bg-fuchsia-950/40 border border-fuchsia-800 text-fuchsia-300 hover:bg-fuchsia-900/40 transition cursor-pointer font-medium">
+              15% de 200
+            </button>
+            <button onclick="setVisPreset(10, 0, 'divisao')" class="flex-1 py-1.5 px-2 text-[11px] rounded-lg bg-rose-950/40 border border-rose-800 text-rose-300 hover:bg-rose-900/40 transition cursor-pointer font-medium">
+              10 ÷ 0
+            </button>
+          </div>
+        </div>
+
+        <!-- Barra de Progresso do Passo -->
+        <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <span id="step-counter-text" class="font-semibold text-indigo-400">Passo 1 de 6:</span>
+            <span id="step-title-text" class="text-slate-300 font-medium">1. O Laço de Repetição Principal</span>
+          </div>
+          <span id="step-badge-text" class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+            Controle de Fluxo (while)
+          </span>
+        </div>
+      </div>
+
+      <!-- Duas Colunas: Código à Esquerda / Memória à Direita -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <div class="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="code-2" class="w-4 h-4 text-indigo-400"></i>
+              <span class="text-xs font-mono text-slate-300">calculadora.py</span>
+            </div>
+            <span id="active-line-badge" class="text-[11px] font-mono text-indigo-400 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/50">
+              Linha ativa: 40
+            </span>
+          </div>
+          <div id="code-lines-box" class="p-3 overflow-y-auto max-h-[500px] font-mono text-xs leading-relaxed select-text space-y-0.5"></div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-5">
+          <div id="step-desc-card" class="rounded-2xl p-5 border bg-slate-900/90 border-slate-800">
+            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 pb-3 border-b border-slate-800">
+              <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i>
+              O Que o Interpretador Python Está Fazendo:
+            </div>
+            <div class="mt-4">
+              <h3 id="step-detail-title" class="text-base font-bold text-white mb-2">1. O Laço de Repetição Principal</h3>
+              <p id="step-detail-desc" class="text-xs text-slate-300 leading-relaxed">
+                O Python entra no laço while True. Isso garante que o programa continue rodando para fazer múltiplos cálculos.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800">
+              <span class="text-[11px] text-slate-400 block mb-1">Instrução avaliada:</span>
+              <div id="step-instruction-box" class="p-2.5 rounded-lg bg-slate-950 font-mono text-xs text-emerald-300 border border-slate-800 whitespace-pre overflow-x-auto">while True:</div>
+            </div>
+          </div>
+
+          <!-- Memória / Variáveis -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 pb-3 border-b border-slate-800">
+              <i data-lucide="layers" class="w-4 h-4 text-indigo-400"></i>
+              Variáveis na Memória (Python Scope)
+            </div>
+            <div id="step-variables-box" class="mt-4 space-y-2"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: TERMINAL PYTHON (CLI) -->
+    <section id="tab-terminal" class="tab-content space-y-6 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-semibold mb-1">
+              <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+              Ambiente de Terminal Interativo (CLI)
+            </div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Execução no Console do Terminal</h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Simule a experiência real de rodar <code class="font-mono text-indigo-300">python calculadora.py</code> diretamente aqui no navegador!
+            </p>
+          </div>
+          <button onclick="resetTerminal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition cursor-pointer">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            Reiniciar Sessão
+          </button>
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          <span class="text-xs text-slate-400 font-medium">Testes Rápidos Automatizados:</span>
+          <button onclick="runMacro(['5', '200', '15', ''])" class="px-2.5 py-1 text-xs rounded-md bg-fuchsia-950/40 hover:bg-fuchsia-900/50 text-fuchsia-300 border border-fuchsia-800/60 transition cursor-pointer font-medium">
+            Porcentagem (15% de 200)
+          </button>
+          <button onclick="runMacro(['1', '35', '15', ''])" class="px-2.5 py-1 text-xs rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer">
+            Adição (35 + 15)
+          </button>
+          <button onclick="runMacro(['4', '10', '0', ''])" class="px-2.5 py-1 text-xs rounded-md bg-rose-950/40 hover:bg-rose-900/50 text-rose-300 border border-rose-800/60 transition cursor-pointer font-medium">
+            Divisão por Zero (10 / 0)
+          </button>
+          <button onclick="runMacro(['6'])" class="px-2.5 py-1 text-xs rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer">
+            Sair (Opção 6)
+          </button>
+        </div>
+      </div>
+
+      <!-- Janela do Terminal -->
+      <div class="bg-[#090d16] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl font-mono text-xs">
+        <div class="px-4 py-3 bg-slate-900/95 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-rose-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+            </div>
+            <span class="text-slate-400 text-xs ml-2">bash - python calculadora.py</span>
+          </div>
+          <span class="text-[11px] text-slate-500">Python 3.14</span>
+        </div>
+
+        <div id="terminal-screen" class="p-4 sm:p-6 min-h-[360px] max-h-[500px] overflow-y-auto space-y-1 text-slate-200"></div>
+
+        <div class="p-3 bg-slate-900/80 border-t border-slate-800 flex items-center gap-3">
+          <span class="text-emerald-400 font-bold text-sm">$&gt;</span>
+          <form onsubmit="handleTerminalSubmit(event)" class="flex-1 flex gap-2">
+            <input id="term-input" type="text" placeholder="Digite uma opção (1-6) e pressione Enter..." class="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none placeholder:text-slate-600">
+            <button type="submit" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition cursor-pointer">
+              Enviar
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: GUIA DIDÁTICO -->
+    <section id="tab-guia" class="tab-content space-y-8 hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold mb-3">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          Guia Didático Completo
+        </div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">Os 4 Pilares da sua Calculadora</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800/80">
+            <h3 class="text-base font-bold text-indigo-400 mb-1">1. Funções e Modularidade (def)</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+              Cada operação matemática é isolada em sua própria função com anotações de tipo (<code class="text-indigo-300">Type Hints</code>). Isso organiza o código e permite que cada função seja testada independentemente.
+            </p>
+            <pre class="bg-slate-900 p-3 rounded-lg text-xs text-emerald-300">def porcentagem(valor: float, taxa: float) -> float:
+    return (valor * taxa) / 100.0</pre>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800/80">
+            <h3 class="text-base font-bold text-rose-400 mb-1">2. Tratamento de Erros (try...except)</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+              Divisão por zero e digitação de letras em vez de números são interceptadas com <code class="text-rose-300">ZeroDivisionError</code> e <code class="text-amber-300">ValueError</code>, garantindo que o programa nunca quebre no meio do uso.
+            </p>
+            <pre class="bg-slate-900 p-3 rounded-lg text-xs text-rose-300">try:
+    resultado = divisao(num1, num2)
+except ZeroDivisionError as err:
+    print(f"Erro: {err}")</pre>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800/80">
+            <h3 class="text-base font-bold text-sky-400 mb-1">3. Conversão de Tipos (Casting)</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+              A função <code class="text-indigo-300">input()</code> sempre retorna texto (<code class="text-indigo-300">str</code>). A função <code class="text-indigo-300">float(...)</code> converte o texto para número decimal antes do cálculo aritmético.
+            </p>
+            <pre class="bg-slate-900 p-3 rounded-lg text-xs text-sky-300">num1 = float(input("Digite: "))</pre>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800/80">
+            <h3 class="text-base font-bold text-amber-400 mb-1">4. Laço Contínuo (while True)</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+              Mantém o menu aberto na tela para que o usuário possa fazer vários cálculos seguidos, até escolher explicitamente a opção <code class="text-amber-300">6. Sair</code> (<code class="text-amber-300">break</code>).
+            </p>
+            <pre class="bg-slate-900 p-3 rounded-lg text-xs text-amber-300">while True:
+    exibir_menu()
+    if opcao == "6":
+        break</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script da Aplicação -->
+  <script>
+    // Estado da Calculadora
+    let currentOp = 'porcentagem';
+    let history = [
+      { a: 200, op: '%', b: 15, name: 'Porcentagem', res: 30, error: null },
+      { a: 15, op: '*', b: 3, name: 'Multiplicação', res: 45, error: null },
+      { a: 10, op: '/', b: 0, name: 'Divisão', res: null, error: 'ZeroDivisionError' }
+    ];
+
+    function setOperation(op) {
+      currentOp = op;
+      const opNames = {
+        adicao: 'def adicao(a, b)',
+        subtracao: 'def subtracao(a, b)',
+        multiplicacao: 'def multiplicacao(a, b)',
+        divisao: 'def divisao(a, b)',
+        porcentagem: 'def porcentagem(valor, taxa)'
+      };
+      document.getElementById('func-badge').innerText = opNames[op];
+
+      // Atualiza os botões
+      document.querySelectorAll('.op-btn').forEach(btn => {
+        btn.className = 'op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-slate-950/60 border-slate-800 text-slate-400 hover:bg-slate-800/60';
+      });
+      const activeBtn = document.getElementById(`op-btn-${op}`);
+      if (activeBtn) {
+        if (op === 'porcentagem') {
+          activeBtn.className = 'op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-fuchsia-500/20 border-fuchsia-500 text-fuchsia-300 ring-1 ring-fuchsia-500';
+        } else {
+          activeBtn.className = 'op-btn p-3 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer bg-indigo-500/20 border-indigo-500 text-indigo-300 ring-1 ring-indigo-500';
+        }
+      }
+
+      // Rótulos
+      if (op === 'porcentagem') {
+        document.getElementById('label-num1').innerText = 'Valor Base (a):';
+        document.getElementById('label-num2').innerText = 'Porcentagem % (b):';
+      } else {
+        document.getElementById('label-num1').innerText = 'Primeiro Número (a):';
+        document.getElementById('label-num2').innerText = 'Segundo Número (b):';
+      }
+
+      calculateNow();
+    }
+
+    function setPreset(a, b, op) {
+      document.getElementById('input-num1').value = a;
+      document.getElementById('input-num2').value = b;
+      setOperation(op);
+    }
+
+    function calculateNow() {
+      const a = parseFloat(document.getElementById('input-num1').value);
+      const b = parseFloat(document.getElementById('input-num2').value);
+
+      const statusBadge = document.getElementById('result-status-badge');
+      const successBox = document.getElementById('result-success-box');
+      const errorBox = document.getElementById('result-error-box');
+      const card = document.getElementById('result-card');
+      const exprText = document.getElementById('result-expression-text');
+      const valText = document.getElementById('result-value');
+      const snipText = document.getElementById('result-python-snippet');
+
+      if (isNaN(a) || isNaN(b)) {
+        valText.innerText = '---';
+        return;
+      }
+
+      if (currentOp === 'divisao' && b === 0) {
+        statusBadge.className = 'text-xs px-2.5 py-0.5 rounded-full font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/40';
+        statusBadge.innerText = 'Exceção Capturada';
+        card.className = 'rounded-2xl p-5 border bg-rose-950/20 border-rose-800/60 shadow-lg shadow-rose-950/30 transition-all';
+        successBox.classList.add('hidden');
+        errorBox.classList.remove('hidden');
+        snipText.innerText = `try:\n    resultado = ${a} / 0\nexcept ZeroDivisionError as err:\n    print(f"[!] {err}")`;
+        return;
+      }
+
+      statusBadge.className = 'text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+      statusBadge.innerText = 'Sucesso (200 OK)';
+      card.className = 'rounded-2xl p-5 border bg-emerald-950/20 border-emerald-800/50 shadow-lg shadow-emerald-950/20 transition-all';
+      successBox.classList.remove('hidden');
+      errorBox.classList.add('hidden');
+
+      let res = 0;
+      let symbol = '+';
+      let opName = 'Adição';
+      if (currentOp === 'adicao') { res = a + b; symbol = '+'; opName = 'Adição'; exprText.innerText = `${a} + ${b} =`; }
+      else if (currentOp === 'subtracao') { res = a - b; symbol = '-'; opName = 'Subtração'; exprText.innerText = `${a} - ${b} =`; }
+      else if (currentOp === 'multiplicacao') { res = a * b; symbol = '*'; opName = 'Multiplicação'; exprText.innerText = `${a} * ${b} =`; }
+      else if (currentOp === 'divisao') { res = a / b; symbol = '/'; opName = 'Divisão'; exprText.innerText = `${a} / ${b} =`; }
+      else if (currentOp === 'porcentagem') { res = (a * b) / 100; symbol = '%'; opName = 'Porcentagem'; exprText.innerText = `${b}% de ${a} =`; }
+
+      valText.innerText = res;
+      if (currentOp === 'porcentagem') {
+        snipText.innerText = `resultado = porcentagem(${a}, ${b})  # -> ${b}% de ${a} = ${res}`;
+      } else {
+        snipText.innerText = `resultado = ${currentOp}(${a}, ${b})  # -> ${a} ${symbol} ${b} = ${res}`;
+      }
+    }
+
+    function addToHistory() {
+      const a = parseFloat(document.getElementById('input-num1').value);
+      const b = parseFloat(document.getElementById('input-num2').value);
+      if (isNaN(a) || isNaN(b)) return;
+
+      let res = null;
+      let error = null;
+      let symbol = '+';
+      let opName = 'Adição';
+      if (currentOp === 'adicao') { res = a + b; symbol = '+'; opName = 'Adição'; }
+      else if (currentOp === 'subtracao') { res = a - b; symbol = '-'; opName = 'Subtração'; }
+      else if (currentOp === 'multiplicacao') { res = a * b; symbol = '*'; opName = 'Multiplicação'; }
+      else if (currentOp === 'divisao') {
+        if (b === 0) error = 'ZeroDivisionError';
+        else res = a / b;
+        symbol = '/'; opName = 'Divisão';
+      }
+      else if (currentOp === 'porcentagem') { res = (a * b) / 100; symbol = '%'; opName = 'Porcentagem'; }
+
+      history.unshift({ a, op: symbol, b, name: opName, res, error });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const box = document.getElementById('history-list');
+      if (history.length === 0) {
+        box.innerHTML = '<div class="text-center py-6 text-xs text-slate-500">Nenhum cálculo recente ainda.</div>';
+        return;
+      }
+      box.innerHTML = history.slice(0, 6).map(item => `
+        <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between hover:border-slate-700 transition">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-md bg-slate-800 flex items-center justify-center font-mono text-xs font-bold text-indigo-400">${item.op}</span>
+            <div>
+              <div class="text-xs font-mono text-slate-200">
+                ${item.op === '%' ? `${item.b}% de ${item.a}` : `${item.a} ${item.op} ${item.b}`}
+              </div>
+              <div class="text-[10px] text-slate-500">${item.name}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            ${item.error ? `<span class="text-xs font-mono text-rose-400 font-semibold">${item.error}</span>` : `<span class="text-xs font-mono text-emerald-400 font-bold">= ${item.res}</span>`}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function clearHistory() {
+      history = [];
+      renderHistory();
+    }
+
+    // Tabs
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition';
+      });
+
+      const activeContent = document.getElementById(`tab-${tabId}`);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-sm transition';
+      }
+
+      if (tabId === 'visualizador') initVisualizerSteps();
+      lucide.createIcons();
+    }
+
+    // Visualizador de Passos
+    let visualizerStepIdx = 0;
+    let visualizerSteps = [];
+    let autoPlayTimer = null;
+
+    const PYTHON_CODE = [
+      'def adicao(a: float, b: float) -> float:',
+      '    return a + b',
+      '',
+      'def subtracao(a: float, b: float) -> float:',
+      '    return a - b',
+      '',
+      'def multiplicacao(a: float, b: float) -> float:',
+      '    return a * b',
+      '',
+      'def divisao(a: float, b: float) -> float:',
+      '    if b == 0:',
+      '        raise ZeroDivisionError("Divisão por zero não é permitida.")',
+      '    return a / b',
+      '',
+      'def porcentagem(valor: float, taxa: float) -> float:',
+      '    return (valor * taxa) / 100.0',
+      '',
+      'def main():',
+      '    while True:',
+      '        exibir_menu()',
+      '        opcao = input("Escolha (1-6): ")',
+      '        num1 = float(input("Valor 1: "))',
+      '        num2 = float(input("Valor 2: "))',
+      '        resultado = porcentagem(num1, num2)',
+      '        print(f">>> RESULTADO: {resultado}")'
+    ];
+
+    function initVisualizerSteps() {
+      const a = parseFloat(document.getElementById('vis-input-a').value) || 200;
+      const b = parseFloat(document.getElementById('vis-input-b').value) || 15;
+      const op = document.getElementById('vis-select-op').value;
+
+      if (op === 'porcentagem') {
+        document.getElementById('vis-label-a').innerText = 'Valor Base (a):';
+        document.getElementById('vis-label-b').innerText = 'Porcentagem % (b):';
+      } else {
+        document.getElementById('vis-label-a').innerText = 'Primeiro Número (a):';
+        document.getElementById('vis-label-b').innerText = 'Segundo Número (b):';
+      }
+
+      visualizerSteps = [
+        {
+          line: 19,
+          title: '1. Laço Contínuo Principal',
+          desc: 'O Python entra no laço `while True:`. Isso mantém o programa rodando até o usuário decidir sair.',
+          code: 'while True:',
+          vars: { opcao: 'pendente...', num1: '---', num2: '---' }
+        },
+        {
+          line: 22,
+          title: '2. Entrada do Primeiro Valor (Casting)',
+          desc: `A função float(input()) recebe o texto e converte para número decimal (${a}).`,
+          code: `num1 = float(input())  # Base: ${a}`,
+          vars: { num1: a, num2: '---', op: op }
+        },
+        {
+          line: 23,
+          title: '3. Entrada do Segundo Valor',
+          desc: `O segundo valor é lido e convertido da mesma forma: float("${b}") -> ${b}.`,
+          code: `num2 = float(input())  # Taxa: ${b}%`,
+          vars: { num1: a, num2: b, op: op }
+        },
+        {
+          line: 24,
+          title: `4. Chamada da Função ${op}()`,
+          desc: `O interpretador transfere o controle para a função ${op}. Os parâmetros recebem os valores (${a}, ${b}).`,
+          code: `resultado = ${op}(num1, num2)  # Chamando ${op}(${a}, ${b})`,
+          vars: { escopo: `local (${op})`, a, b }
+        },
+        {
+          line: 16,
+          title: '5. Execução do Cálculo e Retorno',
+          desc: op === 'porcentagem'
+            ? `A CPU calcula a proporção percentual: (${a} * ${b}) / 100 = ${(a * b) / 100}. O comando return devolve o valor.`
+            : `A CPU executa o cálculo matemático e retorna o resultado.`,
+          code: op === 'porcentagem' ? `return (valor * taxa) / 100.0  # ${(a * b) / 100}` : `return a / b`,
+          vars: { calculo: op === 'porcentagem' ? `(${a} * ${b}) / 100` : `${a} / ${b}`, retornado: (a * b) / 100 }
+        },
+        {
+          line: 25,
+          title: '6. Exibição Formatada com f-string',
+          desc: 'A instrução print() imprime o resultado final formatado na tela com interpolação de variáveis.',
+          code: `print(f">>> RESULTADO: {resultado}")  # ${b}% de ${a} = ${(a * b) / 100}`,
+          vars: { resultado: (a * b) / 100, status: 'Concluído com Sucesso' }
+        }
+      ];
+
+      visualizerStepIdx = 0;
+      renderVisualizerStep();
+    }
+
+    function renderVisualizerStep() {
+      const step = visualizerSteps[visualizerStepIdx];
+      if (!step) return;
+
+      document.getElementById('step-counter-text').innerText = `Passo ${visualizerStepIdx + 1} de ${visualizerSteps.length}:`;
+      document.getElementById('step-title-text').innerText = step.title;
+      document.getElementById('active-line-badge').innerText = `Linha ativa: ${step.line}`;
+      document.getElementById('step-detail-title').innerText = step.title;
+      document.getElementById('step-detail-desc').innerText = step.desc;
+      document.getElementById('step-instruction-box').innerText = step.code;
+
+      // Código
+      const codeBox = document.getElementById('code-lines-box');
+      codeBox.innerHTML = PYTHON_CODE.map((codeLine, idx) => {
+        const lineNum = idx + 1;
+        const isActive = lineNum === step.line;
+        return `
+          <div class="flex items-start rounded px-2 py-0.5 transition ${isActive ? 'bg-indigo-950/70 border-l-4 border-indigo-500 text-white font-semibold' : 'text-slate-400 hover:bg-slate-900/50'}">
+            <span class="w-8 text-right pr-3 select-none flex-shrink-0 text-[11px] ${isActive ? 'text-indigo-400 font-bold' : 'text-slate-600'}">${lineNum}</span>
+            <span class="overflow-x-auto whitespace-pre">${isActive ? '▶ ' : ''}${codeLine || ' '}</span>
+          </div>
+        `;
+      }).join('');
+
+      // Variáveis
+      const varBox = document.getElementById('step-variables-box');
+      varBox.innerHTML = Object.entries(step.vars).map(([k, v]) => `
+        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-xs">
+          <span class="text-indigo-400 font-semibold">${k}</span>
+          <span class="font-semibold text-emerald-400">${v}</span>
+        </div>
+      `).join('');
+    }
+
+    function nextStep() {
+      if (visualizerStepIdx < visualizerSteps.length - 1) {
+        visualizerStepIdx++;
+        renderVisualizerStep();
+      }
+    }
+
+    function prevStep() {
+      if (visualizerStepIdx > 0) {
+        visualizerStepIdx--;
+        renderVisualizerStep();
+      }
+    }
+
+    function resetStep() {
+      visualizerStepIdx = 0;
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      autoPlayTimer = null;
+      renderVisualizerStep();
+    }
+
+    function toggleAutoPlay() {
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+      } else {
+        autoPlayTimer = setInterval(() => {
+          if (visualizerStepIdx < visualizerSteps.length - 1) {
+            visualizerStepIdx++;
+            renderVisualizerStep();
+          } else {
+            clearInterval(autoPlayTimer);
+            autoPlayTimer = null;
+          }
+        }, 1500);
+      }
+    }
+
+    function setVisPreset(a, b, op) {
+      document.getElementById('vis-input-a').value = a;
+      document.getElementById('vis-input-b').value = b;
+      document.getElementById('vis-select-op').value = op;
+      initVisualizerSteps();
+    }
+
+    function inspectInVisualizer() {
+      const a = parseFloat(document.getElementById('input-num1').value) || 200;
+      const b = parseFloat(document.getElementById('input-num2').value) || 15;
+      document.getElementById('vis-input-a').value = a;
+      document.getElementById('vis-input-b').value = b;
+      document.getElementById('vis-select-op').value = currentOp;
+      switchTab('visualizador');
+    }
+
+    // Terminal Interativo
+    let termLines = [
+      '================================',
+      '      CALCULADORA EM PYTHON     ',
+      '================================',
+      '1. Adição (+)',
+      '2. Subtração (-)',
+      '3. Multiplicação (*)',
+      '4. Divisão (/)',
+      '5. Porcentagem (%)',
+      '6. Sair',
+      '--------------------------------',
+      'Escolha uma opção (1-6): '
+    ];
+    let termStage = 'opcao';
+    let termSelectedOp = '';
+    let termNum1 = 0;
+
+    function renderTerminal() {
+      const screen = document.getElementById('terminal-screen');
+      screen.innerHTML = termLines.map(line => `
+        <div class="${line.includes('>>> RESULTADO') ? 'text-emerald-400 font-bold' : line.includes('[!]') ? 'text-rose-400 font-semibold' : line.startsWith('>') ? 'text-amber-300 font-bold' : 'text-slate-300'} whitespace-pre-wrap">${line}</div>
+      `).join('');
+      screen.scrollTop = screen.scrollHeight;
+    }
+
+    function handleTerminalSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('term-input');
+      const val = input.value.trim();
+      if (!val && termStage !== 'paused') return;
+      input.value = '';
+
+      if (termStage === 'paused') {
+        termStage = 'opcao';
+        termLines.push('');
+        termLines.push('================================');
+        termLines.push('      CALCULADORA EM PYTHON     ');
+        termLines.push('================================');
+        termLines.push('1. Adição (+)');
+        termLines.push('2. Subtração (-)');
+        termLines.push('3. Multiplicação (*)');
+        termLines.push('4. Divisão (/)');
+        termLines.push('5. Porcentagem (%)');
+        termLines.push('6. Sair');
+        termLines.push('--------------------------------');
+        termLines.push('Escolha uma opção (1-6): ');
+        renderTerminal();
+        return;
+      }
+
+      termLines.push(`> ${val}`);
+
+      if (termStage === 'opcao') {
+        if (val === '6') {
+          termLines.push('Obrigado por usar a calculadora! Encerrando...');
+          termStage = 'paused';
+          renderTerminal();
+          return;
+        }
+        if (!['1', '2', '3', '4', '5'].includes(val)) {
+          termLines.push('[!] Opção inválida! Escolha de 1 a 6.');
+          termLines.push('Escolha uma opção (1-6): ');
+          renderTerminal();
+          return;
+        }
+        termSelectedOp = val;
+        termStage = 'num1';
+        termLines.push(val === '5' ? 'Digite o valor base: ' : 'Digite o primeiro número: ');
+        renderTerminal();
+      } else if (termStage === 'num1') {
+        const n1 = parseFloat(val);
+        if (isNaN(n1)) {
+          termLines.push('[!] ValueError: Por favor digite um número válido!');
+          termStage = 'opcao';
+          termLines.push('Escolha uma opção (1-6): ');
+          renderTerminal();
+          return;
+        }
+        termNum1 = n1;
+        termStage = 'num2';
+        termLines.push(termSelectedOp === '5' ? 'Digite a porcentagem (%): ' : 'Digite o segundo número: ');
+        renderTerminal();
+      } else if (termStage === 'num2') {
+        const n2 = parseFloat(val);
+        if (isNaN(n2)) {
+          termLines.push('[!] ValueError: Por favor digite um número válido!');
+          termStage = 'opcao';
+          termLines.push('Escolha uma opção (1-6): ');
+          renderTerminal();
+          return;
+        }
+
+        let resText = '';
+        if (termSelectedOp === '1') resText = `>>> RESULTADO: ${termNum1} + ${n2} = ${termNum1 + n2}`;
+        else if (termSelectedOp === '2') resText = `>>> RESULTADO: ${termNum1} - ${n2} = ${termNum1 - n2}`;
+        else if (termSelectedOp === '3') resText = `>>> RESULTADO: ${termNum1} * ${n2} = ${termNum1 * n2}`;
+        else if (termSelectedOp === '4') {
+          if (n2 === 0) resText = '[!] ZeroDivisionError: Divisão por zero não é permitida.';
+          else resText = `>>> RESULTADO: ${termNum1} / ${n2} = ${termNum1 / n2}`;
+        }
+        else if (termSelectedOp === '5') {
+          resText = `>>> RESULTADO: ${n2}% de ${termNum1} = ${(termNum1 * n2) / 100}`;
+        }
+
+        termLines.push(resText);
+        termLines.push('\nPressione Enter para continuar...');
+        termStage = 'paused';
+        renderTerminal();
+      }
+    }
+
+    function resetTerminal() {
+      termLines = [
+        '================================',
+        '      CALCULADORA EM PYTHON     ',
+        '================================',
+        '1. Adição (+)',
+        '2. Subtração (-)',
+        '3. Multiplicação (*)',
+        '4. Divisão (/)',
+        '5. Porcentagem (%)',
+        '6. Sair',
+        '--------------------------------',
+        'Escolha uma opção (1-6): '
+      ];
+      termStage = 'opcao';
+      termSelectedOp = '';
+      renderTerminal();
+    }
+
+    function runMacro(actions) {
+      resetTerminal();
+      let delay = 100;
+      actions.forEach(action => {
+        setTimeout(() => {
+          document.getElementById('term-input').value = action;
+          handleTerminalSubmit({ preventDefault: () => {} });
+        }, delay);
+        delay += 400;
+      });
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      setOperation('porcentagem');
+      renderHistory();
+      renderTerminal();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
+
