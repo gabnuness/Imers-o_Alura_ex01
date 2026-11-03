@@ -164,7 +164,7 @@ export const LineVisualizer: React.FC<LineVisualizerProps> = ({
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3 items-center">
           <div>
             <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-              Primeiro Número (a):
+              {operation === 'porcentagem' ? 'Valor Base (a):' : 'Primeiro Número (a):'}
             </label>
             <input
               type="number"
@@ -187,12 +187,13 @@ export const LineVisualizer: React.FC<LineVisualizerProps> = ({
               <option value="subtracao">Subtração (-)</option>
               <option value="multiplicacao">Multiplicação (*)</option>
               <option value="divisao">Divisão (/)</option>
+              <option value="porcentagem">Porcentagem (%)</option>
             </select>
           </div>
 
           <div>
             <label className="block text-[11px] font-semibold text-slate-400 mb-1">
-              Segundo Número (b):
+              {operation === 'porcentagem' ? 'Porcentagem % (b):' : 'Segundo Número (b):'}
             </label>
             <input
               type="number"
@@ -202,7 +203,18 @@ export const LineVisualizer: React.FC<LineVisualizerProps> = ({
             />
           </div>
 
-          <div className="flex gap-1.5 pt-4 sm:pt-0">
+          <div className="flex flex-wrap sm:flex-nowrap gap-1.5 pt-4 sm:pt-0">
+            <button
+              type="button"
+              onClick={() => {
+                setA(200);
+                setB(15);
+                setOperation('porcentagem');
+              }}
+              className="flex-1 py-1.5 px-2 text-[11px] rounded-lg bg-fuchsia-950/40 border border-fuchsia-800 text-fuchsia-300 hover:bg-fuchsia-900/40 transition cursor-pointer font-medium"
+            >
+              15% de 200
+            </button>
             <button
               type="button"
               onClick={() => {
@@ -212,7 +224,7 @@ export const LineVisualizer: React.FC<LineVisualizerProps> = ({
               }}
               className="flex-1 py-1.5 px-2 text-[11px] rounded-lg bg-rose-950/40 border border-rose-800 text-rose-300 hover:bg-rose-900/40 transition cursor-pointer font-medium"
             >
-              Simular 10 ÷ 0
+              10 ÷ 0
             </button>
             <button
               type="button"
@@ -223,7 +235,7 @@ export const LineVisualizer: React.FC<LineVisualizerProps> = ({
               }}
               className="flex-1 py-1.5 px-2 text-[11px] rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium"
             >
-              Simular 7 × 6
+              7 × 6
             </button>
           </div>
         </div>
@@ -263,7 +275,7 @@ export const LineVisualizer: React.FC<LineVisualizerProps> = ({
             <div className="flex items-center gap-2">
               <Code2 className="w-4 h-4 text-indigo-400" />
               <span className="text-xs font-mono text-slate-300">
-                calculadora_modular.py
+                calculadora.py
               </span>
             </div>
             <span className="text-[11px] font-mono text-indigo-400 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/50">

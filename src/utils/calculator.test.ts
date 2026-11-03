@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { adicao, subtracao, multiplicacao, divisao, executarCalculo, ZeroDivisionError } from './calculator';
+import {
+  adicao,
+  subtracao,
+  multiplicacao,
+  divisao,
+  porcentagem,
+  executarCalculo,
+  ZeroDivisionError,
+} from './calculator';
 
 test('adicao: soma dois números corretamente', () => {
   assert.equal(adicao(5, 3), 8);
@@ -33,10 +41,20 @@ test('divisao: lanca ZeroDivisionError se divisor for zero', () => {
   );
 });
 
+test('porcentagem: calcula porcentagem de um valor corretamente', () => {
+  assert.equal(porcentagem(200, 15), 30);
+  assert.equal(porcentagem(50, 10), 5);
+  assert.equal(porcentagem(100, 0), 0);
+});
+
 test('executarCalculo: retorna objeto formatado e trata divisao por zero graciosamente', () => {
   const sucesso = executarCalculo(12, 3, 'divisao');
   assert.equal(sucesso.result, 4);
   assert.equal(sucesso.error, undefined);
+
+  const pct = executarCalculo(200, 15, 'porcentagem');
+  assert.equal(pct.result, 30);
+  assert.equal(pct.symbol, '%');
 
   const erroZero = executarCalculo(10, 0, 'divisao');
   assert.equal(erroZero.result, null);

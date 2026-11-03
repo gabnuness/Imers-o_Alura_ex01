@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     const element = document.createElement('a');
     const file = new Blob([PYTHON_MODULAR_CODE], { type: 'text/x-python;charset=utf-8' });
     element.href = URL.createObjectURL(file);
-    element.download = 'calculadora_modular.py';
+    element.download = 'calculadora.py';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 </h1>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                4 operações básicas (+, -, *, /), tratamento de exceções e guia didático interativo
+                Operações aritméticas (+, -, *, /, %), tratamento de exceções e guia didático interativo
               </p>
             </div>
           </div>
@@ -60,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             <button
               onClick={handleDownload}
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition duration-150 cursor-pointer"
-              title="Baixar arquivo calculadora_modular.py"
+              title="Baixar arquivo calculadora.py"
             >
               <Download className="w-3.5 h-3.5" />
               {downloaded ? 'Baixado com Sucesso!' : 'Baixar Script .py'}

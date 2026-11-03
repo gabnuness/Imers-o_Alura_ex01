@@ -4,6 +4,7 @@ import {
   Minus,
   X,
   Divide,
+  Percent,
   AlertTriangle,
   Play,
   RotateCcw,
@@ -29,6 +30,7 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
   const [num2, setNum2] = useState<string>('4');
   const [operation, setOperation] = useState<OperationType>('adicao');
   const [history, setHistory] = useState<CalculationResult[]>([
+    executarCalculo(200, 15, 'porcentagem'),
     executarCalculo(15, 3, 'multiplicacao'),
     executarCalculo(50, 2, 'divisao'),
     executarCalculo(10, 0, 'divisao'),
@@ -94,6 +96,14 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
       color: 'text-violet-400',
       activeClass: 'bg-violet-500/20 border-violet-500 text-violet-300 ring-1 ring-violet-500',
     },
+    {
+      type: 'porcentagem',
+      symbol: '%',
+      label: 'Porcentagem (%)',
+      pythonFunc: 'porcentagem(valor, taxa)',
+      color: 'text-fuchsia-400',
+      activeClass: 'bg-fuchsia-500/20 border-fuchsia-500 text-fuchsia-300 ring-1 ring-fuchsia-500',
+    },
   ];
 
   return (
@@ -107,7 +117,7 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
             Execução de Operações Aritméticas em Python
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            Laboratório Interativo das 4 Operações Básicas
+            Laboratório Interativo das Operações Matemáticas
           </h2>
           <p className="text-sm text-slate-300 mt-2 leading-relaxed">
             Experimente os cálculos aritméticos abaixo. Veja como o Python executa as funções{' '}
@@ -121,12 +131,16 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
             ,{' '}
             <code className="text-indigo-300 font-mono bg-indigo-950/80 px-1.5 py-0.5 rounded text-xs">
               multiplicacao()
-            </code>{' '}
-            e{' '}
+            </code>
+            ,{' '}
             <code className="text-indigo-300 font-mono bg-indigo-950/80 px-1.5 py-0.5 rounded text-xs">
               divisao()
             </code>{' '}
-            e como trata o erro crítico de divisão por zero (<code className="text-rose-300 font-mono bg-rose-950/80 px-1.5 py-0.5 rounded text-xs">ZeroDivisionError</code>).
+            e{' '}
+            <code className="text-fuchsia-300 font-mono bg-fuchsia-950/80 px-1.5 py-0.5 rounded text-xs">
+              porcentagem()
+            </code>
+            , além de como trata o erro crítico de divisão por zero (<code className="text-rose-300 font-mono bg-rose-950/80 px-1.5 py-0.5 rounded text-xs">ZeroDivisionError</code>).
           </p>
         </div>
       </div>
@@ -140,7 +154,7 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
                 1. Painel de Entrada &amp; Operação
               </span>
               <span className="text-xs text-indigo-400 font-mono bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800/40">
-                def {operation}(a, b)
+                def {operation}({operation === 'porcentagem' ? 'valor, taxa' : 'a, b'})
               </span>
             </div>
 
@@ -180,6 +194,13 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
                 </button>
                 <button
                   type="button"
+                  onClick={() => handlePreset(200, 15, 'porcentagem')}
+                  className="px-2.5 py-1 text-xs rounded-md bg-fuchsia-950/40 hover:bg-fuchsia-900/50 text-fuchsia-300 border border-fuchsia-800/60 transition cursor-pointer font-medium"
+                >
+                  15% de 200 (Porcentagem)
+                </button>
+                <button
+                  type="button"
                   onClick={() => handlePreset(10, 0, 'divisao')}
                   className="px-2.5 py-1 text-xs rounded-md bg-rose-950/40 hover:bg-rose-900/50 text-rose-300 border border-rose-800/60 transition cursor-pointer font-medium flex items-center gap-1"
                 >
@@ -196,7 +217,7 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
                   htmlFor="input-num1"
                   className="block text-xs font-semibold text-slate-300 mb-1.5"
                 >
-                  Primeiro Número (a):
+                  {operation === 'porcentagem' ? 'Valor Base (a):' : 'Primeiro Número (a):'}
                 </label>
                 <div className="relative">
                   <input
@@ -222,7 +243,7 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
                   htmlFor="input-num2"
                   className="block text-xs font-semibold text-slate-300 mb-1.5"
                 >
-                  Segundo Número (b):
+                  {operation === 'porcentagem' ? 'Porcentagem % (b):' : 'Segundo Número (b):'}
                 </label>
                 <div className="relative">
                   <input
@@ -247,9 +268,9 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
             {/* Operation Selector Buttons */}
             <div className="mt-5">
               <label className="block text-xs font-semibold text-slate-300 mb-2">
-                Escolha a Operação Básica:
+                Escolha a Operação:
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                 {operationsList.map((op) => {
                   const isSelected = operation === op.type;
                   return (
@@ -276,7 +297,9 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
                             ? 'a - b'
                             : op.type === 'multiplicacao'
                             ? 'a * b'
-                            : 'a / b'}
+                            : op.type === 'divisao'
+                            ? 'a / b'
+                            : '(a * b) / 100'}
                         </div>
                       </div>
                     </button>
@@ -353,7 +376,9 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
               ) : (
                 <div className="mt-3">
                   <div className="text-slate-400 text-xs font-mono">
-                    {currentResult.a} {currentResult.symbol} {currentResult.b} =
+                    {currentResult.operation === 'porcentagem'
+                      ? `${currentResult.b}% de ${currentResult.a} =`
+                      : `${currentResult.a} ${currentResult.symbol} ${currentResult.b} =`}
                   </div>
                   <div className="text-3xl sm:text-4xl font-extrabold text-white font-mono mt-1 tracking-tight">
                     {currentResult.result}
@@ -409,7 +434,9 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
                       </span>
                       <div>
                         <div className="text-xs font-mono text-slate-200">
-                          {item.a} {item.symbol} {item.b}
+                          {item.operation === 'porcentagem'
+                            ? `${item.b}% de ${item.a}`
+                            : `${item.a} ${item.symbol} ${item.b}`}
                         </div>
                         <div className="text-[10px] text-slate-500">
                           {item.opName}
@@ -434,10 +461,10 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
             </div>
           </div>
 
-          {/* Quick summary of the 4 Python functions */}
+          {/* Quick summary of the Python functions */}
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-              As 4 Funções Fundamentais
+              Funções Fundamentais da Calculadora
             </h3>
             <div className="space-y-2 text-xs font-mono">
               <div className="p-2 rounded-lg bg-slate-950 border border-slate-800/70 text-slate-300">
@@ -460,6 +487,11 @@ export const CalculatorVisual: React.FC<CalculatorVisualProps> = ({
                 <span className="text-violet-400">divisao</span>(a, b):{' '}
                 <span className="text-indigo-400">if</span> b == 0:{' '}
                 <span className="text-rose-400">raise</span> ZeroDivisionError(...)
+              </div>
+              <div className="p-2 rounded-lg bg-slate-950 border border-slate-800/70 text-slate-300">
+                <span className="text-indigo-400">def</span>{' '}
+                <span className="text-fuchsia-400">porcentagem</span>(valor, taxa):{' '}
+                <span className="text-indigo-400">return</span> (valor * taxa) / 100.0
               </div>
             </div>
           </div>

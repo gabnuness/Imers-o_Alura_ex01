@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Terminal as TerminalIcon, Play, RotateCcw, CornerDownLeft, Sparkles } from 'lucide-react';
-import { adicao, subtracao, multiplicacao, divisao } from '../utils/calculator';
+import { adicao, subtracao, multiplicacao, divisao, porcentagem } from '../utils/calculator';
 
 interface TerminalLine {
   id: string;
@@ -17,9 +17,10 @@ export const TerminalSimulator: React.FC = () => {
     { id: '5', type: 'output', text: '2. Subtração (-)' },
     { id: '6', type: 'output', text: '3. Multiplicação (*)' },
     { id: '7', type: 'output', text: '4. Divisão (/)' },
-    { id: '8', type: 'output', text: '5. Sair' },
-    { id: '9', type: 'output', text: '--------------------------------' },
-    { id: '10', type: 'prompt', text: 'Escolha uma opção (1-5): ' },
+    { id: '8', type: 'output', text: '5. Porcentagem (%)' },
+    { id: '9', type: 'output', text: '6. Sair' },
+    { id: '10', type: 'output', text: '--------------------------------' },
+    { id: '11', type: 'prompt', text: 'Escolha uma opção (1-6): ' },
   ]);
 
   const [stage, setStage] = useState<'opcao' | 'num1' | 'num2' | 'paused'>('opcao');
@@ -45,9 +46,10 @@ export const TerminalSimulator: React.FC = () => {
     { id: Math.random().toString(), type: 'output', text: '2. Subtração (-)' },
     { id: Math.random().toString(), type: 'output', text: '3. Multiplicação (*)' },
     { id: Math.random().toString(), type: 'output', text: '4. Divisão (/)' },
-    { id: Math.random().toString(), type: 'output', text: '5. Sair' },
+    { id: Math.random().toString(), type: 'output', text: '5. Porcentagem (%)' },
+    { id: Math.random().toString(), type: 'output', text: '6. Sair' },
     { id: Math.random().toString(), type: 'output', text: '--------------------------------' },
-    { id: Math.random().toString(), type: 'prompt', text: 'Escolha uma opção (1-5): ' },
+    { id: Math.random().toString(), type: 'prompt', text: 'Escolha uma opção (1-6): ' },
   ];
 
   const handleInputSubmit = (val: string) => {
@@ -71,7 +73,7 @@ export const TerminalSimulator: React.FC = () => {
     setInputValue('');
 
     if (currentStage === 'opcao') {
-      if (trimmed === '5') {
+      if (trimmed === '6') {
         stageRef.current = 'paused';
         setStage('paused');
         setLines((prev) => [
@@ -85,7 +87,7 @@ export const TerminalSimulator: React.FC = () => {
         return;
       }
 
-      if (!['1', '2', '3', '4'].includes(trimmed)) {
+      if (!['1', '2', '3', '4', '5'].includes(trimmed)) {
         stageRef.current = 'opcao';
         setStage('opcao');
         setLines((prev) => [
@@ -93,7 +95,7 @@ export const TerminalSimulator: React.FC = () => {
           {
             id: Math.random().toString(),
             type: 'error',
-            text: '\n[!] Opção inválida! Escolha um número de 1 a 5.',
+            text: '\n[!] Opção inválida! Escolha um número de 1 a 6.',
           },
           ...showMenu([]),
         ]);
@@ -106,7 +108,11 @@ export const TerminalSimulator: React.FC = () => {
       setStage('num1');
       setLines((prev) => [
         ...prev,
-        { id: Math.random().toString(), type: 'prompt', text: 'Digite o primeiro número: ' },
+        {
+          id: Math.random().toString(),
+          type: 'prompt',
+          text: trimmed === '5' ? 'Digite o valor base: ' : 'Digite o primeiro número: ',
+        },
       ]);
     } else if (currentStage === 'num1') {
       const parsed = parseFloat(trimmed);
@@ -130,7 +136,11 @@ export const TerminalSimulator: React.FC = () => {
       setStage('num2');
       setLines((prev) => [
         ...prev,
-        { id: Math.random().toString(), type: 'prompt', text: 'Digite o segundo número: ' },
+        {
+          id: Math.random().toString(),
+          type: 'prompt',
+          text: selectedOpRef.current === '5' ? 'Digite a porcentagem (%): ' : 'Digite o segundo número: ',
+        },
       ]);
     } else if (currentStage === 'num2') {
       const parsedNum2 = parseFloat(trimmed);
@@ -169,6 +179,9 @@ export const TerminalSimulator: React.FC = () => {
         } else if (op === '4') {
           const res = divisao(num1, num2);
           resText = `>>> RESULTADO: ${num1} / ${num2} = ${res}`;
+        } else if (op === '5') {
+          const res = porcentagem(num1, num2);
+          resText = `>>> RESULTADO: ${num2}% de ${num1} = ${res}`;
         }
       } catch (err: unknown) {
         isErr = true;
@@ -211,9 +224,10 @@ export const TerminalSimulator: React.FC = () => {
       { id: '5', type: 'output', text: '2. Subtração (-)' },
       { id: '6', type: 'output', text: '3. Multiplicação (*)' },
       { id: '7', type: 'output', text: '4. Divisão (/)' },
-      { id: '8', type: 'output', text: '5. Sair' },
-      { id: '9', type: 'output', text: '--------------------------------' },
-      { id: '10', type: 'prompt', text: 'Escolha uma opção (1-5): ' },
+      { id: '8', type: 'output', text: '5. Porcentagem (%)' },
+      { id: '9', type: 'output', text: '6. Sair' },
+      { id: '10', type: 'output', text: '--------------------------------' },
+      { id: '11', type: 'prompt', text: 'Escolha uma opção (1-6): ' },
     ]);
   };
 
@@ -242,7 +256,7 @@ export const TerminalSimulator: React.FC = () => {
               Execução no Console do Terminal
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Simule a experiência real de rodar <code className="font-mono text-indigo-300">python calculadora_modular.py</code> no terminal.
+              Simule a experiência real de rodar <code className="font-mono text-indigo-300">python calculadora.py</code> no terminal.
             </p>
           </div>
 
@@ -277,6 +291,13 @@ export const TerminalSimulator: React.FC = () => {
           </button>
           <button
             type="button"
+            onClick={() => runMacro(['5', '200', '15', ''])}
+            className="px-2.5 py-1 text-xs rounded-md bg-fuchsia-950/40 hover:bg-fuchsia-900/50 text-fuchsia-300 border border-fuchsia-800/60 transition cursor-pointer font-medium"
+          >
+            Porcentagem (15% de 200)
+          </button>
+          <button
+            type="button"
             onClick={() => runMacro(['4', '10', '0', ''])}
             className="px-2.5 py-1 text-xs rounded-md bg-rose-950/40 hover:bg-rose-900/50 text-rose-300 border border-rose-800/60 transition cursor-pointer font-medium"
           >
@@ -291,10 +312,10 @@ export const TerminalSimulator: React.FC = () => {
           </button>
           <button
             type="button"
-            onClick={() => runMacro(['5'])}
+            onClick={() => runMacro(['6'])}
             className="px-2.5 py-1 text-xs rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer"
           >
-            Sair (Opção 5)
+            Sair (Opção 6)
           </button>
         </div>
       </div>
@@ -309,7 +330,7 @@ export const TerminalSimulator: React.FC = () => {
               <div className="w-3 h-3 rounded-full bg-amber-500/80" />
               <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
             </div>
-            <span className="text-slate-400 text-xs ml-2">bash - python calculadora_modular.py</span>
+            <span className="text-slate-400 text-xs ml-2">bash - python calculadora.py</span>
           </div>
           <span className="text-[11px] text-slate-500">Python 3.12.3</span>
         </div>
@@ -363,7 +384,7 @@ export const TerminalSimulator: React.FC = () => {
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={
                 stage === 'opcao'
-                  ? 'Digite 1, 2, 3, 4 ou 5 e pressione Enter...'
+                  ? 'Digite 1, 2, 3, 4, 5 ou 6 e pressione Enter...'
                   : stage === 'paused'
                   ? 'Pressione Enter para continuar...'
                   : 'Digite o número e pressione Enter...'

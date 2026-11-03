@@ -24,6 +24,13 @@ def divisao(a: float, b: float) -> float:
         raise ZeroDivisionError("Erro matemático: Divisão por zero não é permitida.")
     return a / b
 
+def porcentagem(valor: float, taxa: float) -> float:
+    """
+    Retorna a porcentagem calculada (taxa% de valor).
+    Exemplo: porcentagem(200, 15) -> 15% de 200 = 30.0
+    """
+    return (valor * taxa) / 100.0
+
 def exibir_menu() -> None:
     """Exibe o menu de operações disponíveis no console."""
     print("\n" + "=" * 32)
@@ -33,28 +40,33 @@ def exibir_menu() -> None:
     print("2. Subtração (-)")
     print("3. Multiplicação (*)")
     print("4. Divisão (/)")
-    print("5. Sair")
+    print("5. Porcentagem (%)")
+    print("6. Sair")
     print("-" * 32)
 
 def main():
     while True:
         exibir_menu()
-        opcao = input("Escolha uma opção (1-5): ").strip()
+        opcao = input("Escolha uma opção (1-6): ").strip()
 
         # Encerramento controlado
-        if opcao == "5":
+        if opcao == "6":
             print("\nObrigado por usar a calculadora! Encerrando...")
             break
 
         # Validação da opção
-        if opcao not in ("1", "2", "3", "4"):
-            print("\n[!] Opção inválida! Escolha um número de 1 a 5.")
+        if opcao not in ("1", "2", "3", "4", "5"):
+            print("\n[!] Opção inválida! Escolha um número de 1 a 6.")
             continue
 
         # Entrada e conversão de dados com tratamento de erro
         try:
-            num1 = float(input("Digite o primeiro número: "))
-            num2 = float(input("Digite o segundo número: "))
+            if opcao == "5":
+                num1 = float(input("Digite o valor base: "))
+                num2 = float(input("Digite a porcentagem (%): "))
+            else:
+                num1 = float(input("Digite o primeiro número: "))
+                num2 = float(input("Digite o segundo número: "))
         except ValueError:
             print("\n[!] Erro de entrada: Por favor, digite apenas números válidos!")
             continue
@@ -73,8 +85,14 @@ def main():
             elif opcao == "4":
                 resultado = divisao(num1, num2)
                 simbolo = "/"
+            elif opcao == "5":
+                resultado = porcentagem(num1, num2)
+                simbolo = "%"
 
-            print(f"\n>>> RESULTADO: {num1} {simbolo} {num2} = {resultado}")
+            if opcao == "5":
+                print(f"\n>>> RESULTADO: {num2}% de {num1} = {resultado}")
+            else:
+                print(f"\n>>> RESULTADO: {num1} {simbolo} {num2} = {resultado}")
 
         except ZeroDivisionError as err:
             print(f"\n[!] Exceção capturada: {err}")

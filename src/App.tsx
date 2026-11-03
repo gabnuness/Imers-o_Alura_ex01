@@ -16,9 +16,9 @@ export default function App() {
     b: number;
     op: OperationType;
   }>({
-    a: 12,
-    b: 4,
-    op: 'adicao',
+    a: 200,
+    b: 15,
+    op: 'porcentagem',
   });
 
   const handleInspectInVisualizer = (a: number, b: number, op: OperationType) => {
@@ -60,10 +60,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-400">
-              Calculadora Python das 4 Operações Básicas
+              Calculadora Python &amp; Laboratório Didático
             </span>
             <span>•</span>
-            <span>Adição, Subtração, Multiplicação e Divisão</span>
+            <span>Adição, Subtração, Multiplicação, Divisão e Porcentagem</span>
           </div>
           <div className="flex items-center gap-4 text-[11px] text-slate-500">
             <span>PEP 8 &amp; Type Hints</span>

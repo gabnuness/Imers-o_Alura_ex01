@@ -9,7 +9,7 @@ export class ZeroDivisionError extends Error {
   }
 }
 
-export type OperationType = 'adicao' | 'subtracao' | 'multiplicacao' | 'divisao';
+export type OperationType = 'adicao' | 'subtracao' | 'multiplicacao' | 'divisao' | 'porcentagem';
 
 export interface CalculationResult {
   a: number;
@@ -54,12 +54,20 @@ export function divisao(a: number, b: number): number {
   return a / b;
 }
 
+/**
+ * Calcula a porcentagem: taxa% de valor -> (valor * taxa) / 100
+ */
+export function porcentagem(valor: number, taxa: number): number {
+  return (valor * taxa) / 100;
+}
+
 export function executarCalculo(a: number, b: number, operacao: OperationType): CalculationResult {
   const symbolMap: Record<OperationType, { symbol: string; name: string }> = {
     adicao: { symbol: '+', name: 'Adição' },
     subtracao: { symbol: '-', name: 'Subtração' },
     multiplicacao: { symbol: '*', name: 'Multiplicação' },
     divisao: { symbol: '/', name: 'Divisão' },
+    porcentagem: { symbol: '%', name: 'Porcentagem' },
   };
 
   const { symbol, name } = symbolMap[operacao];
@@ -79,9 +87,17 @@ export function executarCalculo(a: number, b: number, operacao: OperationType): 
       case 'divisao':
         result = divisao(a, b);
         break;
+      case 'porcentagem':
+        result = porcentagem(a, b);
+        break;
       default:
         throw new Error(`Operação desconhecida: ${operacao}`);
     }
+
+    const pythonSnippet =
+      operacao === 'porcentagem'
+        ? `def porcentagem(valor: float, taxa: float) -> float:\n    return (valor * taxa) / 100.0\n\nresultado = porcentagem(${a}, ${b})  # -> ${b}% de ${a} = ${result}`
+        : `resultado = ${a} ${symbol} ${b}  # -> ${result}`;
 
     return {
       a,
@@ -90,7 +106,7 @@ export function executarCalculo(a: number, b: number, operacao: OperationType): 
       symbol,
       opName: name,
       result,
-      pythonSnippet: `resultado = ${a} ${symbol} ${b}  # -> ${result}`,
+      pythonSnippet,
     };
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : String(err);
